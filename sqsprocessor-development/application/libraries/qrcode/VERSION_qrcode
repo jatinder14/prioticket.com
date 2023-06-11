@@ -1,0 +1,28 @@
+v4.1.0      26 may 2014     Fix potential break in PNG writter.
+                            Fix BCGColor. Deprecated usage of string character reference.
+                            Rotation of text or barcode is now CLOCKWISE.
+                            Fix dimension being 1 pixel height too small.
+                            Padding calculation was not done properly. Might result in too big barcodes.
+                            Use ISO-8859-1 when generating a barcode with the user interface.
+                            Usage of quotes and double quotes was not working properly with the user interface.
+v4.0.0      4  oct 2012     Files moved to support 1D and 2D barcodes together
+                            Whiskers has been removed from writing a small line in scale 1 (bug in PHP)
+                            New graphical interface for 2D
+                            Versioning is now per file
+                            BoxFix can now be overriden
+                            Fix some references
+v3.2.0      16 sep 2011     Renaming setStructureAppend by setStructuredAppend
+v3.1.1      28 aug 2011     Fix a bug with double backslash when acceptECI is activated
+                            AcceptECI is now turn off by default since it's less common.
+v3.1.0      3  aug 2011     Support for transparent background
+v3.0.0      15 apr 2011     Brand new version which includes some breaking changes.
+                            Now supports the possibility to add labels around the barcode really easily thanks to the method addLabel()
+                            You can also specify the alignment of the label, rotation, etc.
+                            If the label is bigger than the barcode itself, the image will get bigger to avoid text clipping.
+v2.0.0      21 mar 2011     Better support for failure instead of writing the error on the UI, an exception is being thrown.
+v1.1.1      20 aug 2010     Change the default QRCODE_SIZE_SMALLEST for QRCODE_SIZE_FULL since the most use is the full one.
+v1.1.0      7  apr 2010     Fix some bugs with switching tables (letters to numeric and vice versa)
+                            Supports FNC1 characters
+                            Supports ECI characters
+                            Supports Structure Append
+v1.0.0      22 apr 2010     New version of QRCode.

@@ -1,0 +1,21 @@
+Create server in google cloud
+
+create bucket
+create bigquery database and table
+create topic
+
+
+https://cloud.google.com/pubsub/docs/reference/libraries
+
+composer require google/cloud-pubsub
+
+
+
+create Service account
+prioticketgpub@pubsub-server.iam.gserviceaccount.com
+
+Download json key
+
+
+
+

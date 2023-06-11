@@ -1,0 +1,78 @@
+image: php:7.3-fpm
+stages:
+  - analysis
+  - deploy
+sonarqube:
+  stage: analysis
+  only:
+    - test
+  before_script:
+    - apt-get update
+    - apt-get install -y unzip wget
+    - wget https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-3.3.0.1492-linux.zip
+    - unzip ./sonar-scanner-cli-3.3.0.1492-linux.zip -d /opt/
+    - mv /opt/sonar-scanner-3.3.0.1492-linux/ /opt/sonar-scanner/
+  script:
+    - /opt/sonar-scanner/bin/sonar-scanner -Dsonar.projectKey=$SONAR_KEY -Dsonar.projectVersion=$CI_COMMIT_SHA -Dsonar.sources=./ -Dsonar.host.url=$SONAR_HOST_URL -Dsonar.sourceEncoding=utf-8 -Dsonar.login=$SONAR_LOGIN -Dsonar.php.tests.reportPath=$SONAR_TESTS_REPORT -Dsonar.php.coverage.reportPaths=$SONAR_TESTS_COVERAGE_REPORT
+  variables:
+    SONAR_HOST_URL: https://sonarqube.intranet.prioticket.com
+    SONAR_KEY: mpos-api
+    SONAR_LOGIN: 0c9c81814c1fde9816e483f346f3deaa71312b1f
+    SONAR_TESTS_REPORT: tests/Logs/junit.xml
+    SONAR_TESTS_COVERAGE_REPORT: tests/Logs/clover.xml
+
+Deploy_Development: 
+  image: gitlab.prioticket.dev:5050/intranet/ci-images/images/debian-11.4:1.0.0 
+  stage: deploy
+  script:
+    - echo "Deploying application..."
+    - echo "Application successfully deployed."
+  environment:
+    name: development
+  only:
+  - development
+
+Deploy_Test:  
+  image: gitlab.prioticket.dev:5050/intranet/ci-images/images/debian-11.4:1.0.0
+  stage: deploy  
+  script:
+    - echo "Deploying application..."
+    - echo "Application successfully deployed."
+  environment:
+    name: test
+  only:
+  - test
+
+Deploy_Staging: 
+  image: gitlab.prioticket.dev:5050/intranet/ci-images/images/debian-11.4:1.0.0 
+  stage: deploy
+  script:
+    - echo "Deploying application..."
+    - echo "Application successfully deployed."
+  environment:
+    name: staging
+  only:
+  - staging
+  
+Deploy_Sandbox:
+  image: gitlab.prioticket.dev:5050/intranet/ci-images/images/debian-11.4:1.0.0
+  stage: deploy
+  script:
+    - echo "Deploying application..."
+    - echo "Application successfully deployed." 
+  environment:
+    name: sandbox
+  only:
+  - sandbox
+
+Deploy_Production:
+  image: gitlab.prioticket.dev:5050/intranet/ci-images/images/debian-11.4:1.0.0
+  stage: deploy
+  script:
+    - echo "Deploying application..."
+    - echo "Application successfully deployed."
+  environment:
+    name: production
+  only:
+  - production
+  - master

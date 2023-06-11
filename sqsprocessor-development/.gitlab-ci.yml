@@ -1,0 +1,100 @@
+image: ${CI_DEPENDENCY_PROXY_DIRECT_GROUP_IMAGE_PREFIX}/php:7.3-fpm
+stages:
+  - dependencies
+  - test
+  - analysis
+  - deploy
+Composer:
+  stage: dependencies
+  before_script:
+    - apt-get update && apt-get install -y libgmp-dev git zip && ln -s /usr/include/x86_64-linux-gnu/gmp.h /usr/include/gmp.h && docker-php-ext-install gmp pdo_mysql
+    - curl -s https://getcomposer.org/installer | php && mv composer.phar /usr/local/bin/composer
+  script:
+    - composer install
+  cache:
+    key: $CI_COMMIT_REF_SLUG-$CI_PROJECT_DIR
+    paths:
+      - vendor/
+    policy: push
+LINT_Syntax:
+  stage: test
+  cache:
+    key: $CI_COMMIT_REF_SLUG-$CI_PROJECT_DIR
+    paths:
+      - vendor/
+    policy: pull
+  script:
+    - ./vendor/bin/phpcs -n -p -d memory_limit=512M --standard=./phpcs.syntax.xml ./application
+  allow_failure: false  
+SAST_Sonarqube:
+  stage: analysis
+  only:
+    - test
+  image:
+    name: ${CI_DEPENDENCY_PROXY_DIRECT_GROUP_IMAGE_PREFIX}/sonarsource/sonar-scanner-cli:latest
+    entrypoint: [""]
+  variables:
+    SONAR_USER_HOME: "${CI_PROJECT_DIR}/.sonar"  # Defines the location of the analysis task cache
+    GIT_DEPTH: "0"  # Tells git to fetch all the branches of the project, required by the analysis task
+  cache:
+    key: "${CI_JOB_NAME}"
+    paths:
+      - .sonar/cache
+  script:
+    - sonar-scanner
+
+Deploy_Development: 
+  image: gitlab.prioticket.dev:5050/intranet/ci-images/images/debian-11.4:1.0.0 
+  stage: deploy
+  script:
+    - echo "Deploying application..."
+    - echo "Application successfully deployed."
+  environment:
+    name: development
+  only:
+  - development
+
+Deploy_Test:  
+  image: gitlab.prioticket.dev:5050/intranet/ci-images/images/debian-11.4:1.0.0
+  stage: deploy  
+  script:
+    - echo "Deploying application..."
+    - echo "Application successfully deployed."
+  environment:
+    name: test
+  only:
+  - test
+
+Deploy_Staging: 
+  image: gitlab.prioticket.dev:5050/intranet/ci-images/images/debian-11.4:1.0.0 
+  stage: deploy
+  script:
+    - echo "Deploying application..."
+    - echo "Application successfully deployed."
+  environment:
+    name: staging
+  only:
+  - staging
+  
+Deploy_Sandbox:
+  image: gitlab.prioticket.dev:5050/intranet/ci-images/images/debian-11.4:1.0.0
+  stage: deploy
+  script:
+    - echo "Deploying application..."
+    - echo "Application successfully deployed." 
+  environment:
+    name: sandbox
+  only:
+  - sandbox
+
+Deploy_Production:
+  image: gitlab.prioticket.dev:5050/intranet/ci-images/images/debian-11.4:1.0.0
+  stage: deploy
+  script:
+    - echo "Deploying application..."
+    - echo "Application successfully deployed."
+  environment:
+    name: production
+  only:
+  - production
+  - master

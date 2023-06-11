@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<ruleset name="project">
+    <description>Project rules for PHP_CodeSniffer</description>
+    <rule ref="Generic.PHP.Syntax"/>
+    <rule ref="PSR12">
+        <exclude name="PSR12"/>
+    </rule>
+    <rule ref="Generic.Files.LineLength">
+        <properties>
+            <property name="lineLimit" value="200"/>
+        </properties>
+    </rule>
+</ruleset>
